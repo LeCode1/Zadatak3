@@ -42,27 +42,27 @@ int generate(){
 }
 
 void sortQ(que *R){
-    telement p;
-    que *pomocni1=InitQ(pomocni1),*pomocni2=InitQ(pomocni2);
+    telement elem;
+    que *pomR1=InitQ(pomR1),*pomR2=InitQ(pomR2);
 
     for(int i=1;i<=5;i++){
         while(!IsEmptyQ(R)){
-            p = FrontQ(R);
+            elem = FrontQ(R);
             DeQueueQ(R);
-            if(p.ci==i) EnQueueQ(p,pomocni1);
-            else EnQueueQ(p,pomocni2);
+            if(elem.ci==i) EnQueueQ(elem,pomR1);
+            else EnQueueQ(elem,pomR2);
         }
-        while(!IsEmptyQ(pomocni2)){
-            p = FrontQ(pomocni2);
-            DeQueueQ(pomocni2);
-            EnQueueQ(p,R);
+        while(!IsEmptyQ(pomR2)){
+            elem = FrontQ(pomR2);
+            DeQueueQ(pomR2);
+            EnQueueQ(elem,R);
     	}
     }
     //vracanje na originalni red
-    while(!IsEmptyQ(pomocni1)){
-        p = FrontQ(pomocni1);
-        DeQueueQ(pomocni1);
-        EnQueueQ(p,R);
+    while(!IsEmptyQ(pomR1)){
+        elem = FrontQ(pomR1);
+        DeQueueQ(pomR1);
+        EnQueueQ(elem,R);
     }
 }
 
@@ -213,7 +213,7 @@ void delinvP(que* R){
 	cekaonica(R);
 }
 
-que *quickQ = InitQ(quickQ);
+que* quickQ = InitQ(quickQ);
 void brzi_red(que *R,int i){
     int n=0;
 	telement elem;
