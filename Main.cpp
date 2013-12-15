@@ -8,8 +8,8 @@ using namespace std;
 //#include "red_pokazivac.h"
 
 telement* polje;
+int br;
 int generate(){
-	int br;
 	bool agen;
 	
 	cout << "Koliko petorki zelite generirati: ";
@@ -213,6 +213,36 @@ void delinvP(que* R){
 	cekaonica(R);
 }
 
+que *quickQ = InitQ(quickQ);
+void brzi(que *R,int i){
+    telement elem;
+    
+    if(IsEmptyQ(R)) return;
+    else{
+        elem=FrontQ(R);
+        DeQueueQ(R);
+        brzi(R,++i);
+    }
+    int n=int(0.7*i);
+    
+    if(i>n) {
+    	if(elem.di == 3 || elem.di == 4) 
+			EnQueueQ(elem,quickQ);
+    }
+    else EnQueueQ(elem,R);
+}
+    
+void vrati(que *R){
+    telement elem;
+    if(IsEmptyQ(R)) return;
+    else{
+        elem=FrontQ(R);
+        DeQueueQ(R);
+        vrati(R);
+    }
+    EnQueueQ(elem,R);
+}
+
 int main(){
 	que* R = InitQ(R);
 	short choice, brp;
@@ -250,7 +280,19 @@ int main(){
 				if(alocate) delinvP(R);
 				else cout << "Red nije alcoiran!" << endl << endl;
 				break;
-			case 4: break;
+			case 4: 
+				if(alocate){
+					brzi(R,0);
+	                vrati(R);
+	                cout << "Brzi red: " << endl;
+	                cout << "----------" << endl;
+	                cekaonica(quickQ);
+	            	cout << "Originalni red: " << endl;
+	            	cout << "----------------" << endl;
+	                cekaonica(R);
+	            }
+	            else cout << "Red nije alociran!" << endl << endl;
+				break;
 			default: break;
 		}
 	}while(choice);
