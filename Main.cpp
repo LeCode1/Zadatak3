@@ -215,7 +215,8 @@ void delinvP(que* R){
 
 que *quickQ = InitQ(quickQ);
 void brzi(que *R,int i){
-    telement elem;
+    int n=0;
+	telement elem;
     
     if(IsEmptyQ(R)) return;
     else{
@@ -223,9 +224,7 @@ void brzi(que *R,int i){
         DeQueueQ(R);
         brzi(R,++i);
     }
-    int n=0;
     n=int(0.7*i);
-    
     if(i>n)
     	if(elem.di == 3 || elem.di == 4) 
 			EnQueueQ(elem,quickQ);
