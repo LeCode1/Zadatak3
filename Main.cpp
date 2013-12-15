@@ -214,7 +214,7 @@ void delinvP(que* R){
 }
 
 que *quickQ = InitQ(quickQ);
-void brzi(que *R,int i){
+void brzi_red(que *R,int i){
     int n=0;
 	telement elem;
     
@@ -222,7 +222,7 @@ void brzi(que *R,int i){
     else{
         elem=FrontQ(R);
         DeQueueQ(R);
-        brzi(R,++i);
+        brzi_red(R,++i);
     }
     n=int(0.7*i);
     if(i>n)
@@ -231,13 +231,13 @@ void brzi(que *R,int i){
     else EnQueueQ(elem,R);
 }
     
-void vrati(que *R){
+void returnQ(que *R){
     telement elem;
     if(IsEmptyQ(R)) return;
     else{
         elem=FrontQ(R);
         DeQueueQ(R);
-        vrati(R);
+        returnQ(R);
     }
     EnQueueQ(elem,R);
 }
@@ -281,8 +281,8 @@ int main(){
 				break;
 			case 4: 
 				if(alocate){
-					brzi(R,0);
-	                vrati(R);
+					brzi_red(R,0);
+	                returnQ(R);
 	                cout << "Brzi red: " << endl;
 	                cout << "----------" << endl;
 	                cekaonica(quickQ);
