@@ -223,12 +223,12 @@ void brzi(que *R,int i){
         DeQueueQ(R);
         brzi(R,++i);
     }
-    int n=int(0.7*i);
+    int n=0;
+    n=int(0.7*i);
     
-    if(i>n) {
+    if(i>n)
     	if(elem.di == 3 || elem.di == 4) 
 			EnQueueQ(elem,quickQ);
-    }
     else EnQueueQ(elem,R);
 }
     
