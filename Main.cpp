@@ -4,8 +4,8 @@
 #include <ctime>
 using namespace std;
 
-#include "red_polje.h"
-//#include "red_pokazivac.h"
+//#include "red_polje.h"
+#include "red_pokazivac.h"
 
 telement* polje;
 int generate(){
@@ -228,7 +228,7 @@ void brzi_red(que *R, que* quickQ){
         brzi_red(R, quickQ);
     }
     static int percent = (0.3*brP)+0.5;
-    if(!percent)
+	if(!percent)
 		EnQueueQ(elem,R);
     else 
 		if(elem.di == 3 || elem.di == 4){
@@ -236,6 +236,8 @@ void brzi_red(que *R, que* quickQ){
 			percent--;
 			brP--;
 		}
+	if((elem.di != 3 || elem.di != 4) && percent)
+		EnQueueQ(elem,R);
 }
 //Funkcija koja vraca pacijente u glavni red, u originalnom poretku.  
 void return_orderQ(que *R){
