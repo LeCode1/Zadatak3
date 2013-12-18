@@ -236,7 +236,7 @@ void brzi_red(que *R, que* quickQ){
 			percent--;
 			brP--;
 		}
-	if((elem.di != 3 || elem.di != 4) && percent)
+    if((elem.di != 3 || elem.di != 4) && percent)
 		EnQueueQ(elem,R);
 }
 //Funkcija koja vraca pacijente u glavni red, u originalnom poretku.  
