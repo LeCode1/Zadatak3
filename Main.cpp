@@ -8,9 +8,9 @@ using namespace std;
 //#include "red_pokazivac.h"
 
 telement* polje;
-int br;
 int generate(){
 	bool agen;
+	int br;
 	
 	cout << "Koliko petorki zelite generirati: ";
 	cin >> br;
@@ -90,7 +90,7 @@ string ispis_usluge(telement elem){
 }
 
 //Varijabla za pohranjivanje unosa o trenutnoj godini
-int trenG=0;
+int trenG=0, brP=0;
 void addP(que* R, int br){
 	telement elem;
 	int godRaz;
@@ -101,38 +101,43 @@ void addP(que* R, int br){
 	
 	for(int i=0; i<br; i++)
 		for(int j=0; j<3; j++){
-			cout << "Unesite spol pacijenta(M/Z): ";
-			cin >> elem.spol;
-			elem.ai = polje[i].ai;
-			elem.bi = polje[i].bi;
-			if((tolower(elem.spol)=='m' && polje[i].ci==3) || (godRaz>6 && polje[i].ci==4)) polje[i].ci = 5;
-			elem.ci = polje[i].ci;
-			elem.di = polje[i].di;
-			if(tolower(elem.spol)=='m' && polje[i].ei == 4) polje[i].ei = 5;
-			if(tolower(elem.spol)=='z' && polje[i].ei == 5) polje[i].ei = 4;
-			elem.ei = polje[i].ei;
-			cout << ispis_usluge(elem) << endl;
-			cout << "------------" << endl;
+			do{
+				
+				cout << "Unesite spol pacijenta(M/Z): ";
+				cin >> elem.spol;
+				if(tolower(elem.spol) != 'm' && tolower(elem.spol) != 'z') cout << "Neispravan unos! Unesite Z,z,M ili m.\n";
+			}while(tolower(elem.spol) != 'm' && tolower(elem.spol) != 'z');
 			if(tolower(elem.spol) == 'm'){
 				cout << "Unesite ime pacijenta: ";
 				cin >> elem.ime;
 				cout << "Unesite prezime pacijenta: ";
 				cin >> elem.prezime;
-				cout << "Unesite datum rodenja pacijenta: ";
-				cin >> elem.dan, cin >> elem.mj, cin >> elem.god;
-				cout << "--------------------------" << endl << endl;
 			}
 			if(tolower(elem.spol) == 'z'){
 				cout << "Unesite ime pacijentice: ";
 				cin >> elem.ime;
 				cout << "Unesite prezime pacijentice: ";
 				cin >> elem.prezime;
-				cout << "Unesite datum rodenja pacijentice: ";
-				cin >> elem.dan, cin >> elem.mj, cin >> elem.god;
-				cout << "--------------------------" << endl << endl;
 			}
+			cout << "Unesite datum rodenja pacijenta: ";
+			cin >> elem.dan, cin >> elem.mj, cin >> elem.god;
+			cout << "------------" << endl;
 			godRaz = trenG-elem.god;
+			elem.ai = polje[i].ai;
+			elem.bi = polje[i].bi;
+			if((tolower(elem.spol)=='m' && polje[i].ci==3) || (godRaz>6 && polje[i].ci==4)) polje[i].ci = 5;
+			if(tolower(elem.spol)=='z' && polje[i].ei == 5) polje[i].ci = 3;
+			if(tolower(elem.spol)=='z' && godRaz < 16 && polje[i].ei == 4) polje[i].ci = 5;
+			else if(tolower(elem.spol)=='z' && godRaz > 16 && polje[i].ei == 4) polje[i].ci = 3;
+			elem.ci = polje[i].ci;
+			elem.di = polje[i].di;
+			if(tolower(elem.spol)=='m' && polje[i].ei == 4) polje[i].ei = 5;
+			if(tolower(elem.spol)=='z' && polje[i].ei == 5) polje[i].ei = 4;
+			elem.ei = polje[i].ei;
+			cout << ispis_usluge(elem) << endl;
+			cout << "--------------------------" << endl << endl;
 			EnQueueQ(elem, R);
+			brP++;
 		}
 		sortQ(R);
 		
@@ -213,38 +218,41 @@ void delinvP(que* R){
 	cekaonica(R);
 }
 
-que* quickQ = InitQ(quickQ);
-void brzi_red(que *R,int i){
-    int n=0;
+void brzi_red(que *R, que* quickQ){
 	telement elem;
     
     if(IsEmptyQ(R)) return;
     else{
         elem=FrontQ(R);
         DeQueueQ(R);
-        brzi_red(R,++i);
+        brzi_red(R, quickQ);
     }
-    n=int(0.7*i);
-    if(i>n)
-    	if(elem.di == 3 || elem.di == 4) 
+    static int percent = (0.3*brP)+0.5;
+    if(!percent)
+		EnQueueQ(elem,R);
+    else 
+		if(elem.di == 3 || elem.di == 4){
 			EnQueueQ(elem,quickQ);
-    else EnQueueQ(elem,R);
+			percent--;
+			brP--;
+		}
 }
-    
-void returnQ(que *R){
+//Funkcija koja vraca pacijente u glavni red, u originalnom poretku.  
+void return_orderQ(que *R){
     telement elem;
     if(IsEmptyQ(R)) return;
     else{
         elem=FrontQ(R);
         DeQueueQ(R);
-        returnQ(R);
+        return_orderQ(R);
     }
     EnQueueQ(elem,R);
 }
 
 int main(){
 	que* R = InitQ(R);
-	short choice, brp;
+	que* quickQ = InitQ(quickQ);
+	short choice, brN;
 	bool alocate = false;
 	srand(time(NULL));
 	rand();
@@ -268,11 +276,11 @@ int main(){
 			
 		switch(choice){
 			case 1:
-				brp = generate();
-				if(brp) alocate = true; 
+				brN = generate();
+				if(brN) alocate = true; 
 				break;
 			case 2: 
-				if(alocate) addP(R, brp);
+				if(alocate) addP(R, brN);
 				else cout << "Red nije alociran!" << endl << endl;
 				break;
 			case 3: 
@@ -281,8 +289,8 @@ int main(){
 				break;
 			case 4: 
 				if(alocate){
-					brzi_red(R,0);
-	                returnQ(R);
+					brzi_red(R, quickQ);
+	                return_orderQ(R);
 	                cout << "Brzi red: " << endl;
 	                cout << "----------" << endl;
 	                cekaonica(quickQ);
